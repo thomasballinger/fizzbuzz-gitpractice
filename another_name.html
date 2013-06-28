@@ -5,4 +5,34 @@
 
 
     <script src="fizzbuzz.js"></script>
+    <script>
+	var answers = [null, null];
+	var numReporting = 0;
+
+	function report(){
+		numReporting += 1;
+		if (numReporting > 2){
+			document.write(answers[0] + answers[1]);
+		}
+	}
+
+	console.log('making worker')
+	var myWorker = new Worker("worker.js");
+	myWorker.addEventListener("message", function(oEvent){
+		console.log("receiving message:");
+		console.log(oEvent);
+		answers[1] = oEvent.data;
+		report();
+	});
+
+	myWorker.postMessage([51, 100]);
+
+	answers[0] = fizzbuzz(1, 50);
+	report();
+
+	//myWorker.onmessage = function (oEvent) {
+	 // console.log("Called back by the worker!\n");
+	  //console.log(oEvent)
+	  //};
+    </script>
 </html>
